@@ -49,7 +49,7 @@ public class MultipartFileUploader {
         return this;
     }
 
-    public MultipartFileUploader addHeader(String key, String value) {
+    public MultipartFileUploader header(String key, String value) {
         header.put(key, value);
         return this;
     }
@@ -63,12 +63,10 @@ public class MultipartFileUploader {
             con.setUseCaches(false);
             con.setDoOutput(true);
             con.setRequestMethod("POST");
-            con.setRequestProperty("Connection", "Keep-Alive");
-            con.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + BOUNDARY);
-
-            DataOutputStream dos = new DataOutputStream(con.getOutputStream());
 
             this._addHeaders(con);
+
+            DataOutputStream dos = new DataOutputStream(con.getOutputStream());
             this._addFiles(dos);
             this._addParams(dos);
 
@@ -113,9 +111,11 @@ public class MultipartFileUploader {
     }
 
     private void _addHeaders(HttpURLConnection con) {
+        con.setRequestProperty("Connection", "Keep-Alive");
+        con.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + BOUNDARY);
         Set<Entry<String, String>> headerSet = header.entrySet();
         for (Entry<String, String> entry : headerSet) {
-            con.addRequestProperty(entry.getKey(), entry.getValue());
+            con.setRequestProperty(entry.getKey(), entry.getValue());
         }
     }
 
