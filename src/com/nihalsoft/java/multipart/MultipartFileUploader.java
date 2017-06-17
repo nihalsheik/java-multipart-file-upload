@@ -17,19 +17,23 @@ import java.util.Set;
 
 public class MultipartFileUploader {
 
-    private final static String LINE_END = "\r\n";
-    private final static String TWO_HYPHEN = "--";
-    private final static String BOUNDARY = "*****";
+    private String LINE_END = "\r\n";
+    private String TWO_HYPHEN = "--";
+    private String BOUNDARY = "*****";
 
     private String url = "";
     private Map<String, String> params = new HashMap<String, String>();
     private Map<String, String> header = new HashMap<String, String>();
 
-    private List<String> fileNames = new ArrayList<String>();
-    private List<File> files = new ArrayList<File>();
+    private List<Map<String, Object>> files = new ArrayList<Map<String, Object>>();
+
+    public MultipartFileUploader() {
+        this("");
+    }
 
     public MultipartFileUploader(String url) {
         this.url = url;
+        BOUNDARY = "--" + System.currentTimeMillis() + "--";
     }
 
     public MultipartFileUploader params(String key, String value) {
@@ -38,8 +42,10 @@ public class MultipartFileUploader {
     }
 
     public MultipartFileUploader file(String name, File file) {
-        fileNames.add(name);
-        files.add(file);
+        Map<String, Object> t = new HashMap<String, Object>();
+        t.put("name", name);
+        t.put("file", file);
+        files.add(t);
         return this;
     }
 
@@ -126,17 +132,19 @@ public class MultipartFileUploader {
     }
 
     private void _addFiles(DataOutputStream dos) throws IOException {
-        int i = 0;
-        for (File file : files) {
-            String fName = fileNames.get(i++);
+
+        for (Map<String, Object> file : files) {
+
+            String fName = file.get("name").toString();
+            File fileObj = (File) file.get("file");
 
             dos.writeBytes(TWO_HYPHEN + BOUNDARY + LINE_END);
-            dos.writeBytes("Content-Disposition: form-data; name=\"" + fName + "\"; filename=\"" + file.getName() + "\""
-                    + LINE_END);
+            dos.writeBytes("Content-Disposition: form-data; name=\"" + fName + "\"; filename=\"" + fileObj.getName()
+                    + "\"" + LINE_END);
             // dos.writeBytes("Content-Type: image/png" + LINE_END);
             dos.writeBytes(LINE_END);
 
-            FileInputStream fis = new FileInputStream(file);
+            FileInputStream fis = new FileInputStream(fileObj);
 
             byte[] data = new byte[1024];
             int count = 0;
