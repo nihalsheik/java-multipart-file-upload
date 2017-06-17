@@ -15,3 +15,33 @@ public class UploadTest {
 
     }
 }
+-----------------------------------
+
+Receiver : 
+
+    @RequestMapping(value = "/uploadTest", method = RequestMethod.POST)
+    public @ResponseBody Response uploadTest(MultipartHttpServletRequest req) throws ApiException {
+
+        System.out.println("Parameter---------------");
+        for (Entry<String, String[]> h : req.getParameterMap().entrySet()) {
+            System.out.println(h.getKey() + " - " + h.getValue());
+        }
+
+        System.out.println("Header-----------------");
+        for (Entry<String, List<String>> h : req.getRequestHeaders().entrySet()) {
+            System.out.println(h.getKey() + " - " + h.getValue());
+        }
+
+        System.out.println("Files------------------");
+        for (Entry<String, List<MultipartFile>> h : req.getMultiFileMap().entrySet()) {
+            System.out.println(h.getKey() + " - " + h.getValue().size());
+
+            for (MultipartFile t : h.getValue()) {
+                System.out.println(t.getName() + " - " + t.getOriginalFilename());
+            }
+        }
+
+        System.out.println("Done----------------------");
+        
+        return Response.success();
+    }
