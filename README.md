@@ -1,5 +1,6 @@
 Test :
 
+   ```Java
    public static void main(String[] args) {
 
         MultipartFileUploader fu = new MultipartFileUploader("http://localhost:9093/api/dealer/uploadTest");
@@ -18,7 +19,7 @@ Test :
         //@formatter:on
 
     }
-    
+    ```
     
 -----------------------------------
 
