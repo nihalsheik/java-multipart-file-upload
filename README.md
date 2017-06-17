@@ -1,8 +1,4 @@
-package com.nihalsoft.java.multipart;
-
-import java.io.File;
-
-public class UploadTest {
+Test :
 
     public static void main(String[] args) {
 
@@ -14,7 +10,8 @@ public class UploadTest {
         fu.upload();
 
     }
-}
+    
+    
 -----------------------------------
 
 Receiver : 
